@@ -16,6 +16,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.VaadinRequest;
 import org.vaadin.covid.service.CoronaTabService;
 import org.vaadin.covid.service.Place;
 import org.vaadin.covid.service.Stats;
@@ -91,7 +92,8 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         if (place.isPresent()) {
             setPlace(place.get());
         } else {
-            setPlace(coronaTabService.getClosest().getData().get(0));
+            String ip = VaadinRequest.getCurrent().getHeader("X-Forwarded-For");
+            setPlace(coronaTabService.getClosest(ip).getData().get(0));
         }
     }
 
