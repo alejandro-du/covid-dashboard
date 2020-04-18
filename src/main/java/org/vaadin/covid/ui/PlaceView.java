@@ -8,14 +8,14 @@ import com.vaadin.flow.component.board.Row;
 import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.*;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.cookieconsent.CookieConsent;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.OptionalParameter;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import org.vaadin.covid.service.CoronaTabService;
 import org.vaadin.covid.service.Place;
 import org.vaadin.covid.service.Stats;
@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Route("place")
+@PageTitle("Covid Dashboard")
 public class PlaceView extends VerticalLayout implements HasUrlParameter<String> {
 
     private final CoronaTabService coronaTabService;
@@ -56,7 +57,26 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         board.addRow(overviewRow);
         board.addRow(chartRow);
 
-        add(title, board);
+        Image logoImage = new Image("vaadin.png", "Vaadin logo");
+        logoImage.setClassName("logo");
+        Anchor logo = new Anchor("https://vaadin.com", logoImage);
+
+        HorizontalLayout footer = new HorizontalLayout(
+                new Text("Powered by"),
+                logo,
+                new Anchor("https://github.com/alejandro-du/covid-dashboard", "Browse the source code.")
+        );
+        footer.setClassName("footer");
+        footer.setMargin(true);
+
+        footer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+
+        add(
+                new CookieConsent(),
+                title,
+                board,
+                footer
+        );
 
         placeSelector.addValueChangeListener(event -> {
             if (event.isFromClient()) {

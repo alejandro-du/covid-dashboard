@@ -8,6 +8,10 @@ h1 {
     margin-bottom: 0.5em;
 }
 
+a {
+    margin-left: 0.5em;
+}
+
 .place {
     margin-bottom: 1em;
 }
@@ -29,7 +33,16 @@ h1 {
 
 .chart {
     margin-top: 1em;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: var(--lumo-border-radius);
-    box-shadow: .5em .5em .5em 0px rgba(0,0,0,0.3);
+    box-shadow: .5em .5em .5em 0px rgba(0, 0, 0, 0.3);
+}
+
+.footer {
+    font-size: small;
+}
+
+.logo {
+    height: 1em;
+    vertical-align: middle;
 }
