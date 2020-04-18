@@ -58,7 +58,7 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         board.addRow(overviewRow);
         board.addRow(chartRow);
 
-        Image logoImage = new Image("vaadin.png", "Vaadin logo");
+        Image logoImage = new Image("images/vaadin.png", "Vaadin logo");
         logoImage.setClassName("logo");
         Anchor logo = new Anchor("https://vaadin.com", logoImage);
 
