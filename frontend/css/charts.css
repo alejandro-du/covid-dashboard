@@ -1,0 +1,33 @@
+.highcharts-container {
+    font-family: var(--lumo-font-family);
+}
+
+.highcharts-background {
+    fill: var(--lumo-base-color);
+}
+
+.highcharts-title {
+    fill: var(--lumo-header-text-color);
+    font-size: var(--lumo-font-size-xl);
+    font-weight: 600;
+    line-height: var(--lumo-line-height-xs);
+}
+
+.highcharts-legend-item text {
+    fill: var(--lumo-body-text-color);
+}
+
+.highcharts-axis-title,
+.highcharts-axis-labels {
+    fill: var(--lumo-secondary-text-color);
+}
+
+.highcharts-axis-line,
+.highcharts-grid-line,
+.highcharts-tick {
+    stroke: var(--lumo-contrast-10pct);
+}
+
+.highcharts-column-series rect.highcharts-point {
+    stroke: var(--lumo-base-color);
+}
