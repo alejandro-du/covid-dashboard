@@ -11,7 +11,7 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 @Theme(value = Lumo.class, variant = Lumo.DARK)
-@CssImport("./css/styles.css")
+@CssImport(value = "./css/styles.css", include = "vaadin-chart-default-theme")
 @CssImport(value = "./css/charts.css", themeFor = "vaadin-chart", include = "vaadin-chart-default-theme")
 @Route("")
 @PWA(name = "Covid Dashboard", shortName = "Covid", description = "A Covid-19 dashboard app")

@@ -45,7 +45,14 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         this.coronaTabService = coronaTabService;
         places = coronaTabService.findAllPlaces().getData();
 
-        H1 title = new H1("Covid-19 Dashboard");
+        Image icon = new Image("icons/icon-small.png", "Icon");
+        icon.setClassName("icon");
+        HorizontalLayout title = new HorizontalLayout(
+                new H1("Covid-19 Dashboard"),
+                icon
+        );
+        title.setClassName("title");
+        title.setVerticalComponentAlignment(Alignment.END, icon);
 
         placeSelector = new ComboBox<>();
         placeSelector.setClassName("place");
@@ -58,13 +65,13 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         board.addRow(overviewRow);
         board.addRow(chartRow);
 
-        Image logoImage = new Image("images/vaadin.png", "Vaadin logo");
-        logoImage.setClassName("logo");
-        Anchor logo = new Anchor("https://vaadin.com", logoImage);
+        Image vaadinImage = new Image("images/vaadin.png", "Vaadin logo");
+        vaadinImage.setClassName("vaadin");
+        Anchor vaadin = new Anchor("https://vaadin.com", vaadinImage);
 
         HorizontalLayout footer = new HorizontalLayout(
                 new Text("Powered by"),
-                logo,
+                vaadin,
                 new Anchor("https://github.com/alejandro-du/covid-dashboard", "Browse the source code.")
         );
         footer.setClassName("footer");
