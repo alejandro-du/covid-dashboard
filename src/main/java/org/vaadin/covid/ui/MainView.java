@@ -14,7 +14,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 @CssImport("./css/styles.css")
 @CssImport(value = "./css/charts.css", themeFor = "vaadin-chart", include = "vaadin-chart-default-theme")
 @Route("")
-@PWA(name = "Covid Dashboard", shortName = "Covid Dashboard")
+@PWA(name = "Covid Dashboard", shortName = "Covid", description = "A Covid-19 dashboard app")
 @PageTitle("Covid Dashboard")
 public class MainView extends VerticalLayout {
 
