@@ -36,6 +36,18 @@ h1 {
     margin-left: 0.5em;
 }
 
+.number-cases {
+    color: #7cb5ec;
+}
+
+.number-deaths {
+    color: #bb4444;
+}
+
+.number-recovered {
+    color: #90ed7d;
+}
+
 .chart {
     margin-top: 1em;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -56,6 +68,7 @@ h1 {
     h1 {
         font-size: x-large;
     }
+
     .icon {
         height: 2em;
     }

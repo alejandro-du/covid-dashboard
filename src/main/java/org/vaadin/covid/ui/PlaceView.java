@@ -46,16 +46,16 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         places = coronaTabService.findAllPlaces().getData();
 
         Image icon = new Image("icons/icon-small.png", "Icon");
-        icon.setClassName("icon");
+        icon.addClassName("icon");
         HorizontalLayout title = new HorizontalLayout(
                 new H1("Covid-19 Dashboard"),
                 icon
         );
-        title.setClassName("title");
+        title.addClassName("title");
         title.setVerticalComponentAlignment(Alignment.END, icon);
 
         placeSelector = new ComboBox<>();
-        placeSelector.setClassName("place");
+        placeSelector.addClassName("place");
         placeSelector.setItems(places);
         placeSelector.setItemLabelGenerator(Place::getName);
         placeSelector.setPlaceholder("Place");
@@ -66,7 +66,7 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         board.addRow(chartRow);
 
         Image vaadinImage = new Image("images/vaadin.png", "Vaadin logo");
-        vaadinImage.setClassName("vaadin");
+        vaadinImage.addClassName("vaadin");
         Anchor vaadin = new Anchor("https://vaadin.com", vaadinImage);
 
         HorizontalLayout footer = new HorizontalLayout(
@@ -74,7 +74,7 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
                 vaadin,
                 new Anchor("https://github.com/alejandro-du/covid-dashboard", "Browse the source code.")
         );
-        footer.setClassName("footer");
+        footer.addClassName("footer");
         footer.setMargin(true);
 
         footer.setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -111,10 +111,10 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
 
         overviewRow.removeAll();
         overviewRow.add(
-                getStat("Population", place.getPopulation(), null),
-                getStat("Cases", stats.getCases(), place.getPopulation()),
-                getStat("Deaths", stats.getDeaths(), place.getPopulation()),
-                getStat("Recovered", stats.getRecovered(), place.getPopulation())
+                getStat("Population", place.getPopulation(), null, "number-population"),
+                getStat("Cases", stats.getCases(), place.getPopulation(), "number-cases"),
+                getStat("Deaths", stats.getDeaths(), place.getPopulation(), "number-deaths"),
+                getStat("Recovered", stats.getRecovered(), place.getPopulation(), "number-recovered")
         );
         chartRow.removeAll();
         List<Stats> lastDaysDifferenceStats = new ArrayList<>();
@@ -142,25 +142,24 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         );
     }
 
-    private Component getStat(String description, long value, Long total) {
+    private Component getStat(String description, long value, Long total, String cssClass) {
         Div descriptionDiv = new Div(new Text(description));
-        descriptionDiv.setClassName("stat-description");
+        descriptionDiv.addClassName("stat-description");
 
-        String percentageText;
+        String percentageText = "";
         if (total != null) {
-
             double percentage = (double) value / total * 100;
             String percentageStr = new DecimalFormat("#.##").format(percentage);
             percentageText = "(" + percentageStr + "%)";
-        } else {
-            percentageText = "";
         }
 
-        Div percentageDiv = new Div(new Text(percentageText));
-        percentageDiv.setClassName("stat-percentage");
-
         Div valueDiv = new Div(new Text(NumberFormat.getInstance().format(value)));
-        valueDiv.setClassName("stat-value");
+        valueDiv.addClassName(cssClass);
+        valueDiv.addClassName("stat-value");
+
+        Div percentageDiv = new Div(new Text(percentageText));
+        percentageDiv.addClassName(cssClass);
+        percentageDiv.addClassName("stat-percentage");
 
         HorizontalLayout numbersLayout = new HorizontalLayout(
                 valueDiv,
@@ -180,6 +179,8 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
 
     private Component getChart(String title, ChartType chartType, List<Stats> statsList) {
         Chart chart = new Chart(chartType);
+        chart.getElement().getStyle().set("--vaadin-charts-color-1", "#bb4444");
+
         Configuration configuration = chart.getConfiguration();
         configuration.getTooltip().setEnabled(true);
         configuration.getxAxis().setType(AxisType.DATETIME);
@@ -204,7 +205,7 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         configuration.addSeries(recovered);
 
         VerticalLayout layout = new VerticalLayout(chart);
-        layout.setClassName("chart");
+        layout.addClassName("chart");
         layout.setPadding(false);
         return new VerticalLayout(layout);
     }
