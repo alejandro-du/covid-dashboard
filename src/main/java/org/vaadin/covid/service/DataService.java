@@ -24,6 +24,9 @@ public class DataService {
     }
 
     public Place getClosest(String ip) {
+        if (ip == null || ip.trim().isEmpty()) {
+            return restService.findAllPlaces().getData().get(0);
+        }
         return restService.getClosest(ip).getData().get(0);
     }
 

@@ -100,7 +100,7 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
             setPlace(place.get());
         } else {
             String ip = VaadinRequest.getCurrent().getHeader("X-Forwarded-For");
-            setPlace(dataService.getClosest(ip));
+            setPlace(dataService.getClosest(ip) );
         }
     }
 
