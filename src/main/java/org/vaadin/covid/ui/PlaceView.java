@@ -100,7 +100,7 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
             setPlace(place.get());
         } else {
             String ip = VaadinRequest.getCurrent().getHeader("X-Forwarded-For");
-            setPlace(dataService.getClosest(ip) );
+            setPlace(dataService.getClosest(ip));
         }
     }
 
@@ -110,8 +110,12 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         List<Stats> statsList = dataService.getStats(place.getId());
 
         overviewRow.removeAll();
+        if (place.getPopulation() != 0) {
+            overviewRow.add(
+                    getStat("Population", place.getPopulation(), null, "number-population")
+            );
+        }
         overviewRow.add(
-                getStat("Population", place.getPopulation(), null, "number-population"),
                 getStat("Cases", stats.getCases(), place.getPopulation(), "number-cases"),
                 getStat("Deaths", stats.getDeaths(), stats.getCases(), "number-deaths"),
                 getStat("Recovered", stats.getRecovered(), stats.getCases(), "number-recovered")
@@ -147,7 +151,7 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         descriptionDiv.addClassName("stat-description");
 
         String percentageText = "";
-        if (total != null) {
+        if (total != null && total != 0) {
             double percentage = (double) value / total * 100;
             String percentageStr = new DecimalFormat("#.##").format(percentage);
             percentageText = "(" + percentageStr + "%)";
