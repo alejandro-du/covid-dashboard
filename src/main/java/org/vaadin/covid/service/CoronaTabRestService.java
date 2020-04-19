@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@FeignClient(name = "corona-tab", url = "https://api.coronatab.app")
+@FeignClient(name = "corona-tab", url = "${coronatab.url}")
 public interface CoronaTabRestService {
 
     @Data

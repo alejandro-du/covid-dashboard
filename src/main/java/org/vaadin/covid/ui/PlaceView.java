@@ -214,4 +214,5 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         layout.setPadding(false);
         return new VerticalLayout(layout);
     }
+
 }
