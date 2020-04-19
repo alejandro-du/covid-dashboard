@@ -17,7 +17,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinRequest;
-import org.vaadin.covid.service.CoronaTabService;
+import org.vaadin.covid.service.DataService;
 import org.vaadin.covid.service.Place;
 import org.vaadin.covid.service.Stats;
 
@@ -34,16 +34,16 @@ import java.util.Optional;
 @PageTitle("Covid Dashboard")
 public class PlaceView extends VerticalLayout implements HasUrlParameter<String> {
 
-    private final CoronaTabService coronaTabService;
+    private final DataService dataService;
 
     private Row overviewRow = new Row();
     private Row chartRow = new Row();
     private List<Place> places;
     private ComboBox<Place> placeSelector;
 
-    public PlaceView(CoronaTabService coronaTabService) {
-        this.coronaTabService = coronaTabService;
-        places = coronaTabService.findAllPlaces().getData();
+    public PlaceView(DataService dataService) {
+        this.dataService = dataService;
+        places = dataService.findAllPlaces();
 
         Image icon = new Image("icons/icon-small.png", "Icon");
         icon.addClassName("icon");
@@ -100,14 +100,14 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
             setPlace(place.get());
         } else {
             String ip = VaadinRequest.getCurrent().getHeader("X-Forwarded-For");
-            setPlace(coronaTabService.getClosest(ip).getData().get(0));
+            setPlace(dataService.getClosest(ip));
         }
     }
 
     public void setPlace(Place place) {
         placeSelector.setValue(place);
         Stats stats = place.getLatestData();
-        List<Stats> statsList = coronaTabService.getStats(place.getId()).getData();
+        List<Stats> statsList = dataService.getStats(place.getId());
 
         overviewRow.removeAll();
         overviewRow.add(

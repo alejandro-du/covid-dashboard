@@ -7,10 +7,13 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.vaadin.covid.service.DataService;
 
 @SpringBootApplication
 @EnableFeignClients
 @EnableCaching
+@EnableScheduling
 public class Application {
 
     public static void main(String[] args) {
@@ -19,7 +22,7 @@ public class Application {
 
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("covid");
+        return new ConcurrentMapCacheManager(DataService.CORONA_TAB_CACHE);
     }
 
 }
