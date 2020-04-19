@@ -31,8 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Route("place")
-@PageTitle("Covid Dashboard")
-public class PlaceView extends VerticalLayout implements HasUrlParameter<String> {
+public class PlaceView extends VerticalLayout implements HasUrlParameter<String>, HasDynamicTitle {
 
     private final DataService dataService;
 
@@ -95,13 +94,15 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String placeId) {
-        Optional<Place> place = places.stream().filter(p -> p.getId().equals(placeId)).findFirst();
-        if (place.isPresent()) {
-            setPlace(place.get());
-        } else {
-            String ip = VaadinRequest.getCurrent().getHeader("X-Forwarded-For");
-            setPlace(dataService.getClosest(ip));
-        }
+        Optional<Place> placeById = places.stream().filter(p -> p.getId().equals(placeId)).findFirst();
+        setPlace(placeById.orElse(
+                dataService.getClosest(VaadinRequest.getCurrent().getHeader("X-Forwarded-For"))
+        ));
+    }
+
+    @Override
+    public String getPageTitle() {
+        return "Covid Dashboard - " + placeSelector.getValue().getName();
     }
 
     public void setPlace(Place place) {
@@ -213,5 +214,4 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         layout.setPadding(false);
         return new VerticalLayout(layout);
     }
-
 }
