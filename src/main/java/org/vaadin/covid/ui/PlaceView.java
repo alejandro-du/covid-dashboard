@@ -113,8 +113,8 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         overviewRow.add(
                 getStat("Population", place.getPopulation(), null, "number-population"),
                 getStat("Cases", stats.getCases(), place.getPopulation(), "number-cases"),
-                getStat("Deaths", stats.getDeaths(), place.getPopulation(), "number-deaths"),
-                getStat("Recovered", stats.getRecovered(), place.getPopulation(), "number-recovered")
+                getStat("Deaths", stats.getDeaths(), stats.getCases(), "number-deaths"),
+                getStat("Recovered", stats.getRecovered(), stats.getCases(), "number-recovered")
         );
         chartRow.removeAll();
         List<Stats> lastDaysDifferenceStats = new ArrayList<>();
