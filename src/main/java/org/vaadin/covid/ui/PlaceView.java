@@ -94,10 +94,22 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String placeId) {
-        Optional<Place> placeById = places.stream().filter(p -> p.getId().equals(placeId)).findFirst();
-        setPlace(placeById.orElse(
-                dataService.getClosest(VaadinRequest.getCurrent().getHeader("X-Forwarded-For"))
-        ));
+        Optional<Place> placeById = places.stream()
+                .filter(p -> p.getId().equals(placeId))
+                .findFirst();
+        setPlace(placeById.orElse(dataService.getClosest(getIP())));
+    }
+
+    private String getIP() {
+        String ip;
+
+        if ((ip = VaadinRequest.getCurrent().getHeader("X-Forwarded-For")) == null) {
+            if ((ip = VaadinRequest.getCurrent().getHeader("Via")) == null) {
+                ip = VaadinRequest.getCurrent().getRemoteHost();
+            }
+        }
+
+        return ip;
     }
 
     @Override
