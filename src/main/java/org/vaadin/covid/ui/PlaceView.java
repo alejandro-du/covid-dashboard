@@ -44,6 +44,8 @@ public class PlaceView extends VerticalLayout implements HasUrlParameter<String>
         this.dataService = dataService;
         places = dataService.findAllPlaces();
 
+        UI.getCurrent().getPage().executeJs("document.getElementById('pwa-ip').style.transform='translateY(0%)';");
+
         Image icon = new Image("icons/icon-small.png", "Icon");
         icon.addClassName("icon");
         HorizontalLayout title = new HorizontalLayout(
