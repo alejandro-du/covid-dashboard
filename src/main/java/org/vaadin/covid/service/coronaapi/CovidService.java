@@ -8,7 +8,6 @@ import org.vaadin.covid.domain.Day;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,13 +29,8 @@ public class CovidService implements org.vaadin.covid.service.CovidService {
     }
 
     @Override
-    public Optional<Country> getById(String id) {
-        return Optional.of(toDomain(webService.countries(id).getData()));
-    }
-
-    @Override
-    public Country getClosest(String ip) {
-        return findAll().get(0);
+    public Country getById(String id) {
+        return toDomain(webService.countries(id).getData());
     }
 
     private Country toDomain(org.vaadin.covid.service.coronaapi.model.Country c) {

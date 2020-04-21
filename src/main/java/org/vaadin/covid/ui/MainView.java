@@ -21,9 +21,9 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import org.vaadin.covid.domain.Country;
 import org.vaadin.covid.domain.Day;
 import org.vaadin.covid.service.CovidService;
+import org.vaadin.covid.service.IpService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 @CssImport(value = "./css/styles.css", include = "vaadin-chart-default-theme")
@@ -39,8 +39,12 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
     private List<Country> countries;
     private ComboBox<Country> countrySelector;
 
-    public MainView(CovidService covidService) {
+    private final IpService ipService;
+
+    public MainView(IpService ipService, CovidService covidService) {
+        this.ipService = ipService;
         this.covidService = covidService;
+
         countries = covidService.findAll();
 
         Image icon = new Image("icons/icon-small.png", "Icon");
@@ -91,8 +95,16 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String isoCode) {
-        Optional<Country> countryById = covidService.getById(isoCode);
-        setCountry(countryById.orElse(covidService.getClosest(getIP())));
+        try {
+            setCountry(covidService.getById(isoCode));
+        } catch (Exception e) {
+            isoCode = ipService.getIsoCode(getIP());
+            try {
+                setCountry(covidService.getById(isoCode));
+            } catch (Exception e1) {
+                setCountry(covidService.getById("FI"));
+            }
+        }
     }
 
     private String getIP() {
