@@ -38,7 +38,6 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
 
     private Row overviewRow = new Row();
     private Row chartRow = new Row();
-    private List<Country> countries;
     private ComboBox<Country> countrySelector;
 
     private final GeoIpService geoIpService;
@@ -46,8 +45,6 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
     public MainView(GeoIpService geoIpService, CovidService covidService) {
         this.geoIpService = geoIpService;
         this.covidService = covidService;
-
-        countries = covidService.findAll();
 
         Image icon = new Image("icons/icon.png", "Icon");
         icon.addClassName("icon");
@@ -59,7 +56,7 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
         title.setVerticalComponentAlignment(Alignment.END, icon);
 
         countrySelector = new ComboBox<>();
-        countrySelector.setItems(countries);
+        countrySelector.setItems(covidService.findAll());
         countrySelector.setItemLabelGenerator(Country::getName);
         countrySelector.setPlaceholder("Country");
 

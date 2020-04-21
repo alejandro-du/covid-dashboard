@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.vaadin.covid.service.coronaapi.model.Country;
 import org.vaadin.covid.service.coronaapi.model.DataWrapper;
+import org.vaadin.covid.service.coronaapi.model.Timeline;
 
 import java.util.List;
 
@@ -16,5 +17,8 @@ public interface WebService {
 
     @RequestMapping(value = "/countries/{code}")
     DataWrapper<Country> countries(@PathVariable String code);
+
+    @RequestMapping(value = "timeline")
+    DataWrapper<List<Timeline>> timeline();
 
 }

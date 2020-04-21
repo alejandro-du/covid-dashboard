@@ -5,6 +5,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.vaadin.covid.domain.Country;
 import org.vaadin.covid.domain.Day;
+import org.vaadin.covid.service.GeoIpService;
+import org.vaadin.covid.service.coronaapi.model.LatestData;
+import org.vaadin.covid.service.coronaapi.model.Timeline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +26,40 @@ public class CovidService implements org.vaadin.covid.service.CovidService {
 
     @Override
     public List<Country> findAll() {
-        return webService.countries().getData().stream()
+        List<Country> countries = webService.countries().getData().stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
+        countries.add(getGlobal());
+
+        return countries;
+    }
+
+    private Country getGlobal() {
+        List<Timeline> timeLine = webService.timeline().getData();
+        Timeline lastTimeLine = timeLine.get(0);
+
+        LatestData latestData = new LatestData();
+        latestData.setConfirmed(lastTimeLine.getConfirmed());
+        latestData.setDeaths(lastTimeLine.getDeaths());
+        latestData.setRecovered(lastTimeLine.getRecovered());
+
+        org.vaadin.covid.service.coronaapi.model.Country world = new org.vaadin.covid.service.coronaapi.model.Country();
+        world.setCode(GeoIpService.WORLD_ISO_CODE);
+        world.setName("Global");
+        world.setPopulation(7800000000l);
+        world.setLatest_data(latestData);
+        world.setTimeline(timeLine);
+
+        return toDomain(world);
     }
 
     @Override
     public Country getById(String id) {
-        return toDomain(webService.countries(id).getData());
+        if (GeoIpService.WORLD_ISO_CODE.equals(id)) {
+            return getGlobal();
+        } else {
+            return toDomain(webService.countries(id).getData());
+        }
     }
 
     private Country toDomain(org.vaadin.covid.service.coronaapi.model.Country c) {

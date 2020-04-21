@@ -15,6 +15,8 @@ import java.net.InetAddress;
 @Service
 public class GeoIpService {
 
+    public static final String WORLD_ISO_CODE = "global";
+
     private DatabaseReader dbReader;
 
     public GeoIpService(@Value("${geoLite2.city.mmdb.database.location}") String geoLiteDatabaseLocation) {
@@ -27,7 +29,7 @@ public class GeoIpService {
     }
 
     public String getIsoCode(String ip) {
-        String isoCode = "XX";
+        String isoCode = WORLD_ISO_CODE;
 
         try {
             InetAddress inetAddress = InetAddress.getByName(ip);
