@@ -45,6 +45,11 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-cookie-consent-flow</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.maxmind.geoip2</groupId>
+            <artifactId>geoip2</artifactId>
+            <version>2.13.1</version>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -18,13 +18,15 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import lombok.extern.log4j.Log4j2;
 import org.vaadin.covid.domain.Country;
 import org.vaadin.covid.domain.Day;
 import org.vaadin.covid.service.CovidService;
-import org.vaadin.covid.service.IpService;
+import org.vaadin.covid.service.GeoIpService;
 
 import java.util.List;
 
+@Log4j2
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 @CssImport(value = "./css/styles.css", include = "vaadin-chart-default-theme")
 @CssImport(value = "./css/charts.css", themeFor = "vaadin-chart", include = "vaadin-chart-default-theme")
@@ -39,15 +41,15 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
     private List<Country> countries;
     private ComboBox<Country> countrySelector;
 
-    private final IpService ipService;
+    private final GeoIpService geoIpService;
 
-    public MainView(IpService ipService, CovidService covidService) {
-        this.ipService = ipService;
+    public MainView(GeoIpService geoIpService, CovidService covidService) {
+        this.geoIpService = geoIpService;
         this.covidService = covidService;
 
         countries = covidService.findAll();
 
-        Image icon = new Image("icons/icon-small.png", "Icon");
+        Image icon = new Image("icons/icon.png", "Icon");
         icon.addClassName("icon");
         HorizontalLayout title = new HorizontalLayout(
                 new H1("Covid-19 Dashboard"),
@@ -96,12 +98,16 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String isoCode) {
         try {
+            log.info("ISO code requested: " + isoCode);
             setCountry(covidService.getById(isoCode));
         } catch (Exception e) {
-            isoCode = ipService.getIsoCode(getIP());
+            String ip = getIP();
+            isoCode = geoIpService.getIsoCode(ip);
+            log.info("ISO code - IP: " + isoCode + " - " + ip);
             try {
                 setCountry(covidService.getById(isoCode));
             } catch (Exception e1) {
+                log.info("Cannot find ISO code: " + isoCode + " - " + ip);
                 setCountry(covidService.getById("FI"));
             }
         }
