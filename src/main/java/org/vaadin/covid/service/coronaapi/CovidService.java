@@ -3,9 +3,8 @@ package org.vaadin.covid.service.coronaapi;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.vaadin.covid.domain.Area;
-import org.vaadin.covid.domain.Stats;
-import org.vaadin.covid.service.coronaapi.model.Country;
+import org.vaadin.covid.domain.Country;
+import org.vaadin.covid.domain.Day;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,28 +23,28 @@ public class CovidService implements org.vaadin.covid.service.CovidService {
     }
 
     @Override
-    public List<Area> findAllAreas() {
+    public List<Country> findAll() {
         return webService.countries().getData().stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Area> getById(String id) {
+    public Optional<Country> getById(String id) {
         return Optional.of(toDomain(webService.countries(id).getData()));
     }
 
     @Override
-    public Area getClosest(String ip) {
-        return findAllAreas().get(0);
+    public Country getClosest(String ip) {
+        return findAll().get(0);
     }
 
-    private Area toDomain(Country c) {
+    private Country toDomain(org.vaadin.covid.service.coronaapi.model.Country c) {
         if (c != null) {
-            List<Stats> stats = new ArrayList<>();
+            List<Day> days = new ArrayList<>();
             if (c.getTimeline() != null) {
-                stats = c.getTimeline().stream()
-                        .map(t -> new Stats(
+                days = c.getTimeline().stream()
+                        .map(t -> new Day(
                                 t.getDate(),
                                 t.getConfirmed(),
                                 t.getDeaths(),
@@ -57,14 +56,14 @@ public class CovidService implements org.vaadin.covid.service.CovidService {
                         .collect(Collectors.toList());
             }
 
-            return new Area(
+            return new Country(
                     c.getCode(),
                     c.getName(),
                     c.getPopulation(),
                     c.getLatest_data().getConfirmed(),
                     c.getLatest_data().getDeaths(),
                     c.getLatest_data().getRecovered(),
-                    stats
+                    days
             );
         } else {
             return null;

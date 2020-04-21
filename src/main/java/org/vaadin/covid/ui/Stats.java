@@ -8,9 +8,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-public class Stat extends VerticalLayout {
+public class Stats extends VerticalLayout {
 
-    public Stat(String description, long value, Long total, String cssClass) {
+    public Stats(String description, long value, Long total, String cssClass) {
         Div descriptionDiv = new Div(new Text(description));
         descriptionDiv.addClassName("stat-description");
 

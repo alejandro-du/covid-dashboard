@@ -18,8 +18,8 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import org.vaadin.covid.domain.Area;
-import org.vaadin.covid.domain.Stats;
+import org.vaadin.covid.domain.Country;
+import org.vaadin.covid.domain.Day;
 import org.vaadin.covid.service.CovidService;
 
 import java.util.List;
@@ -36,12 +36,12 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
 
     private Row overviewRow = new Row();
     private Row chartRow = new Row();
-    private List<Area> places;
-    private ComboBox<Area> areaSelector;
+    private List<Country> countries;
+    private ComboBox<Country> countrySelector;
 
     public MainView(CovidService covidService) {
         this.covidService = covidService;
-        places = covidService.findAllAreas();
+        countries = covidService.findAll();
 
         Image icon = new Image("icons/icon-small.png", "Icon");
         icon.addClassName("icon");
@@ -52,14 +52,13 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
         title.addClassName("title");
         title.setVerticalComponentAlignment(Alignment.END, icon);
 
-        areaSelector = new ComboBox<>();
-        areaSelector.addClassName("place");
-        areaSelector.setItems(places);
-        areaSelector.setItemLabelGenerator(Area::getName);
-        areaSelector.setPlaceholder("Place");
+        countrySelector = new ComboBox<>();
+        countrySelector.setItems(countries);
+        countrySelector.setItemLabelGenerator(Country::getName);
+        countrySelector.setPlaceholder("Country");
 
         Board board = new Board();
-        board.addRow(areaSelector);
+        board.addRow(countrySelector);
         board.addRow(overviewRow);
         board.addRow(chartRow);
 
@@ -83,17 +82,17 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
                 footer
         );
 
-        areaSelector.addValueChangeListener(event -> {
+        countrySelector.addValueChangeListener(event -> {
             if (event.isFromClient()) {
-                UI.getCurrent().navigate(MainView.class, areaSelector.getValue().getIsoCode());
+                UI.getCurrent().navigate(MainView.class, countrySelector.getValue().getIsoCode());
             }
         });
     }
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String isoCode) {
-        Optional<Area> placeById = covidService.getById(isoCode);
-        setArea(placeById.orElse(covidService.getClosest(getIP())));
+        Optional<Country> countryById = covidService.getById(isoCode);
+        setCountry(countryById.orElse(covidService.getClosest(getIP())));
     }
 
     private String getIP() {
@@ -110,49 +109,49 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
 
     @Override
     public String getPageTitle() {
-        return "Covid Dashboard - " + areaSelector.getValue().getName();
+        return "Covid Dashboard - " + countrySelector.getValue().getName();
     }
 
-    public void setArea(Area area) {
-        if (area != null) {
-            areaSelector.setValue(area);
+    public void setCountry(Country country) {
+        if (country != null) {
+            countrySelector.setValue(country);
             overviewRow.removeAll();
 
-            if (area.getPopulation() != 0) {
+            if (country.getPopulation() != 0) {
                 overviewRow.add(
-                        new Stat("Population", area.getPopulation(), null, "number-population")
+                        new Stats("Population", country.getPopulation(), null, "number-population")
                 );
             }
             overviewRow.add(
-                    new Stat("Cases", area.getTotalCases(), area.getPopulation(), "number-cases"),
-                    new Stat("Deaths", area.getTotalDeaths(), area.getTotalCases(), "number-deaths"),
-                    new Stat("Recovered", area.getTotalRecovered(), area.getTotalCases(), "number-recovered")
+                    new Stats("Cases", country.getTotalCases(), country.getPopulation(), "number-cases"),
+                    new Stats("Deaths", country.getTotalDeaths(), country.getTotalCases(), "number-deaths"),
+                    new Stats("Recovered", country.getTotalRecovered(), country.getTotalCases(), "number-recovered")
             );
             chartRow.removeAll();
             chartRow.add(new Chart(
                     "Cumulative",
                     ChartType.SPLINE,
-                    area.getTimeline(),
-                    Stats::getCases,
-                    Stats::getDeaths,
-                    Stats::getRecovered
+                    country.getDays(),
+                    Day::getCases,
+                    Day::getDeaths,
+                    Day::getRecovered
             ));
 
-            if (area.getTimeline().size() >= 2) {
+            if (country.getDays().size() >= 2) {
                 int days;
-                if (area.getTimeline().size() <= 7) {
-                    days = area.getTimeline().size();
+                if (country.getDays().size() <= 7) {
+                    days = country.getDays().size();
                 } else {
                     days = 8;
                 }
-                List<Stats> timeline = area.getTimeline().subList(0, days);
+                List<Day> timeline = country.getDays().subList(0, days);
                 chartRow.add(new Chart(
                         "Daily",
                         ChartType.COLUMN,
                         timeline,
-                        Stats::getNewCases,
-                        Stats::getNewDeaths,
-                        Stats::getNewRecovered
+                        Day::getNewCases,
+                        Day::getNewDeaths,
+                        Day::getNewRecovered
                 ));
             }
 

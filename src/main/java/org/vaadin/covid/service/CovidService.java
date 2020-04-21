@@ -1,16 +1,16 @@
 package org.vaadin.covid.service;
 
-import org.vaadin.covid.domain.Area;
+import org.vaadin.covid.domain.Country;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CovidService {
 
-    List<Area> findAllAreas();
+    List<Country> findAll();
 
-    Optional<Area> getById(String id);
+    Optional<Country> getById(String id);
 
-    Area getClosest(String ip);
+    Country getClosest(String ip);
 
 }

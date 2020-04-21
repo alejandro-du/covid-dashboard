@@ -1,4 +1,3 @@
-
 package org.vaadin.covid.service.coronaapi.model;
 
 import lombok.Data;

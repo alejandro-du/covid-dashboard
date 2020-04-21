@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Area {
+public class Country {
 
     @EqualsAndHashCode.Include
     private String isoCode;
@@ -26,6 +26,6 @@ public class Area {
 
     private Long totalRecovered;
 
-    private List<Stats> timeline;
+    private List<Day> days;
 
 }
