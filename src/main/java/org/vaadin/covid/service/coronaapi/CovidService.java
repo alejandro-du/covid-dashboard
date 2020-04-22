@@ -1,6 +1,7 @@
 package org.vaadin.covid.service.coronaapi;
 
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.vaadin.covid.domain.Country;
@@ -25,6 +26,7 @@ public class CovidService implements org.vaadin.covid.service.CovidService {
     }
 
     @Override
+    @Cacheable(cacheNames = COVID_SERVICE_CACHE)
     public List<Country> findAll() {
         List<Country> countries = webService.countries().getData().stream()
                 .map(this::toDomain)
@@ -54,6 +56,7 @@ public class CovidService implements org.vaadin.covid.service.CovidService {
     }
 
     @Override
+    @Cacheable(cacheNames = COVID_SERVICE_CACHE)
     public Country getById(String id) {
         if (GeoIpService.WORLD_ISO_CODE.equals(id)) {
             return getGlobal();
