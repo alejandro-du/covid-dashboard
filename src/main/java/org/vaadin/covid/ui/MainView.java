@@ -134,16 +134,16 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
 
             if (country.getPopulation() != 0) {
                 overviewRow.add(
-                        new Stats("Population", country.getPopulation(), null, "number-population")
+                        new DashboardStats("Population", country.getPopulation(), null, "number-population")
                 );
             }
             overviewRow.add(
-                    new Stats("Cases", country.getTotalCases(), country.getPopulation(), "number-cases"),
-                    new Stats("Deaths", country.getTotalDeaths(), country.getTotalCases(), "number-deaths"),
-                    new Stats("Recovered", country.getTotalRecovered(), country.getTotalCases(), "number-recovered")
+                    new DashboardStats("Cases", country.getTotalCases(), country.getPopulation(), "number-cases"),
+                    new DashboardStats("Deaths", country.getTotalDeaths(), country.getTotalCases(), "number-deaths"),
+                    new DashboardStats("Recovered", country.getTotalRecovered(), country.getTotalCases(), "number-recovered")
             );
             chartRow.removeAll();
-            chartRow.add(new Chart(
+            chartRow.add(new DashboardChart(
                     "Cumulative",
                     ChartType.SPLINE,
                     country.getDays(),
@@ -160,7 +160,7 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
                     days = 8;
                 }
                 List<Day> timeline = country.getDays().subList(0, days);
-                chartRow.add(new Chart(
+                chartRow.add(new DashboardChart(
                         "Daily",
                         ChartType.COLUMN,
                         timeline,

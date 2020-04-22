@@ -1,5 +1,6 @@
 package org.vaadin.covid.ui;
 
+import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.*;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.vaadin.covid.domain.Day;
@@ -9,10 +10,10 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.function.Function;
 
-public class Chart extends VerticalLayout {
+public class DashboardChart extends VerticalLayout {
 
-    public Chart(String title, ChartType chartType, List<Day> statsList, Function<Day, Long> casesFunction, Function<Day, Long> deathsFunction, Function<Day, Long> recoveredFunction) {
-        com.vaadin.flow.component.charts.Chart chart = new com.vaadin.flow.component.charts.Chart(chartType);
+    public DashboardChart(String title, ChartType chartType, List<Day> statsList, Function<Day, Long> casesFunction, Function<Day, Long> deathsFunction, Function<Day, Long> recoveredFunction) {
+        Chart chart = new Chart(chartType);
         chart.getElement().getStyle().set("--vaadin-charts-color-1", "#bb4444");
 
         Configuration configuration = chart.getConfiguration();
@@ -41,7 +42,7 @@ public class Chart extends VerticalLayout {
         VerticalLayout layout = new VerticalLayout(chart);
         layout.addClassName("chart");
         layout.setPadding(false);
-        add(new VerticalLayout(layout));
+        add(layout);
     }
 
 }
