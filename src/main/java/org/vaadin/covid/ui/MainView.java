@@ -32,7 +32,7 @@ import java.util.List;
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 @CssImport(value = "./css/styles.css", include = "vaadin-chart-default-theme")
 @CssImport(value = "./css/charts.css", themeFor = "vaadin-chart", include = "vaadin-chart-default-theme")
-@PWA(name = "Covid Dashboard", shortName = "Covid", description = "A Covid-19 dashboard app")
+@PWA(name = "Covid Dashboard", shortName = "Covid", description = "A Covid-19 dashboard app", display = "fullscreen")
 @Route("")
 public class MainView extends VerticalLayout implements HasUrlParameter<String>, HasDynamicTitle {
 
