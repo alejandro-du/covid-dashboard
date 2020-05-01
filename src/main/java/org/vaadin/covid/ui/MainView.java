@@ -18,7 +18,7 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.vaadin.covid.domain.Country;
 import org.vaadin.covid.domain.Day;
 import org.vaadin.covid.service.CovidService;
@@ -26,7 +26,7 @@ import org.vaadin.covid.service.GeoIpService;
 
 import java.util.List;
 
-@Log4j2
+@Slf4j
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 @CssImport(value = "./css/styles.css", include = "vaadin-chart-default-theme")
 @CssImport(value = "./css/charts.css", themeFor = "vaadin-chart", include = "vaadin-chart-default-theme")
@@ -100,7 +100,7 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
         } catch (Exception e) {
             String ip = getIP();
             isoCode = geoIpService.getIsoCode(ip);
-            log.info("ISO code - IP: " + isoCode + " - " + ip);
+            log.info("ISO code from IP: " + isoCode + " - " + ip);
             try {
                 setCountry(covidService.getById(isoCode));
             } catch (Exception e1) {

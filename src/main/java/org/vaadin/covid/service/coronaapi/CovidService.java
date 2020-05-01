@@ -13,6 +13,7 @@ import org.vaadin.covid.service.coronaapi.model.Timeline;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class CovidService implements org.vaadin.covid.service.CovidService {
@@ -28,12 +29,11 @@ public class CovidService implements org.vaadin.covid.service.CovidService {
     @Override
     @Cacheable(cacheNames = COVID_SERVICE_CACHE)
     public List<Country> findAll() {
-        List<Country> countries = webService.countries().getData().stream()
-                .map(this::toDomain)
+        return Stream.concat(
+                Stream.of(getGlobal()),
+                webService.countries().getData().stream()
+                        .map(this::toDomain))
                 .collect(Collectors.toList());
-        countries.add(getGlobal());
-
-        return countries;
     }
 
     private Country getGlobal() {
@@ -48,7 +48,7 @@ public class CovidService implements org.vaadin.covid.service.CovidService {
         org.vaadin.covid.service.coronaapi.model.Country world = new org.vaadin.covid.service.coronaapi.model.Country();
         world.setCode(GeoIpService.WORLD_ISO_CODE);
         world.setName("Global");
-        world.setPopulation(7800000000l);
+        world.setPopulation(7800000000L);
         world.setLatest_data(latestData);
         world.setTimeline(timeLine);
 
