@@ -3,7 +3,7 @@ package org.vaadin.covid.service;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-@Log4j2
+@Slf4j
 @Service
 public class GeoIpService {
 
@@ -38,8 +38,10 @@ public class GeoIpService {
                 isoCode = country.getCountry().getIsoCode();
             }
 
-        } catch (IOException | GeoIp2Exception e) {
-            e.printStackTrace();
+        } catch (GeoIp2Exception ignored) {
+
+        } catch (IOException e) {
+            log.error("Error getting ISO code", e);
         }
 
         return isoCode;

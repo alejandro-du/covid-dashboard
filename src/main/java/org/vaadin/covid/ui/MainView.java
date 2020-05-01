@@ -94,19 +94,19 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String isoCode) {
-        try {
-            log.info("ISO code requested: " + isoCode);
-            setCountry(covidService.getById(isoCode));
-        } catch (Exception e) {
-            String ip = getIP();
+        String ip = getIP();
+
+        if (isoCode == null || isoCode.isEmpty()) {
             isoCode = geoIpService.getIsoCode(ip);
-            log.info("ISO code from IP: " + isoCode + " - " + ip);
-            try {
-                setCountry(covidService.getById(isoCode));
-            } catch (Exception e1) {
-                log.info("Cannot find ISO code: " + isoCode + " - " + ip);
-                setCountry(covidService.getById("FI"));
-            }
+        }
+
+        try {
+            log.info(String.format("IP - ISO code: %s - %s", ip, isoCode));
+            setCountry(covidService.getById(isoCode));
+
+        } catch (Exception e) {
+            log.info("Cannot find ISO code: " + isoCode);
+            setCountry(covidService.getById(GeoIpService.WORLD_ISO_CODE));
         }
     }
 
