@@ -8,12 +8,13 @@ import org.vaadin.covid.service.coronaapi.model.DataWrapper;
 import org.vaadin.covid.service.coronaapi.model.Timeline;
 
 import java.util.List;
+import java.util.SortedSet;
 
 @FeignClient(name = "coronaapi", url = "${coronaapi.url}")
 public interface WebService {
 
     @RequestMapping(value = "/countries")
-    DataWrapper<List<Country>> countries();
+    DataWrapper<SortedSet<Country>> countries();
 
     @RequestMapping(value = "/countries/{code}")
     DataWrapper<Country> countries(@PathVariable String code);
