@@ -19,6 +19,7 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.vaadin.covid.domain.Country;
 import org.vaadin.covid.domain.Day;
@@ -105,10 +106,14 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
             log.info(String.format("IP - ISO code: %s - %s", ip, isoCode));
             setCountry(covidService.getById(isoCode));
 
-        } catch (Exception e) {
+        } catch (FeignException e) {
             log.info("Cannot find ISO code: " + isoCode);
             setCountry(covidService.getById(GeoIpService.WORLD_ISO_CODE));
-            Notification.show("Country not found");
+            Notification.show("Country not found", 5000, Notification.Position.MIDDLE);
+
+        } catch (Exception e) {
+            log.error("Error fetching data", e);
+            Notification.show("Error fetching data", 5000, Notification.Position.MIDDLE);
         }
     }
 
@@ -134,7 +139,7 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
             countrySelector.setValue(country);
             overviewRow.removeAll();
 
-            if (country.getPopulation() != 0) {
+            if (country.getPopulation() != null && country.getPopulation() != 0) {
                 overviewRow.add(
                         new DashboardStats("Population", country.getPopulation(), null, "number-population")
                 );
