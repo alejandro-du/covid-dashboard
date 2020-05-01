@@ -109,11 +109,11 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
         } catch (FeignException e) {
             log.info("Cannot find ISO code: " + isoCode);
             setCountry(covidService.getById(GeoIpService.WORLD_ISO_CODE));
-            Notification.show("Country not found", 5000, Notification.Position.MIDDLE);
+            Notification.show("Country not found. Showing global data.", 5000, Notification.Position.MIDDLE);
 
         } catch (Exception e) {
             log.error("Error fetching data", e);
-            Notification.show("Error fetching data", 5000, Notification.Position.MIDDLE);
+            Notification.show("Error fetching data.", 5000, Notification.Position.MIDDLE);
         }
     }
 
