@@ -61,6 +61,7 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
         countrySelector.setItems(covidService.findAll());
         countrySelector.setItemLabelGenerator(Country::getName);
         countrySelector.setPlaceholder("Country");
+        countrySelector.setClearButtonVisible(true);
 
         Board board = new Board();
         board.addRow(countrySelector);
@@ -88,7 +89,7 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String>,
         );
 
         countrySelector.addValueChangeListener(event -> {
-            if (event.isFromClient()) {
+            if (event.isFromClient() && countrySelector.getValue() != null) {
                 UI.getCurrent().navigate(MainView.class, countrySelector.getValue().getIsoCode());
             }
         });
